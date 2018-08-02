@@ -43,8 +43,6 @@ def general_open(fileName, key, default_opener="xdg-open", wait=True):
         raise Warning("How should I use the opener %s?" % opener)
 
 
-
-
 def format_doc(python_format, document, key=""):
     """Construct a string using a pythonic format string and a document.
 

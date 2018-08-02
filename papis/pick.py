@@ -5,6 +5,7 @@
 import curses
 import re
 import string
+import fuzzywuzzy.process
 
 
 __all__ = ['Picker', 'pick']
@@ -54,6 +55,7 @@ class Picker(object):
         self.header_filter = header_filter
         self.body_filter = body_filter
         self.match_filter = match_filter
+        self.match_strings = [self.match_filter(o) for o in self.options]
 
         if default_index >= len(options):
             raise ValueError(
@@ -119,16 +121,30 @@ class Picker(object):
                                        .replace(']', '\\]')
         return r".*"+re.sub(r"\s+", ".*", cleaned_search)
 
+    def get_cleaned_search(self):
+        return self.search.replace('(', '\\(')\
+                           .replace(')', '\\)')\
+                           .replace('+', '\\+')\
+                           .replace('[', '\\[')\
+                           .replace(']', '\\]')
+
     def get_filtered_options(self):
         """TODO: Docstring for get_filtered_options.
         :returns: TODO
 
         """
         new_options = []
-        regex = self.get_search_regex()
-        for option in self.options:
-            if re.match(regex, self.match_filter(option), re.I):
-                new_options += [option]
+        string_matches = fuzzywuzzy.process.extract(
+            self.search,
+            self.match_strings
+        )
+        for smatch in (s[0] for s in string_matches):
+            index = self.match_strings.index(smatch)
+            new_options += [self.options[index]]
+        # regex = self.get_search_regex()
+        # for option in self.options:
+            # if re.match(regex, self.match_filter(option), re.I):
+                # new_options += [option]
         return new_options
 
     def get_lines(self):
