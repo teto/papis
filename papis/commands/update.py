@@ -24,7 +24,7 @@ Examples
 """
 
 import papis
-import urllib.error
+import six.moves.urllib.error as error
 import logging
 import papis.utils
 import papis.bibtex

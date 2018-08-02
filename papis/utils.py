@@ -223,9 +223,9 @@ def clean_document_name(doc_path):
     :returns: Basename of the path cleaned
     :rtype:  str
 
-    >>> clean_document_name('{{] __ }}albert )(*& $ß $+_ einstein (*]')
+    >>> clean_document_name('{{] __ }}albert )(*& $ss $+_ einstein (*]')
     'albert-ss-_-einstein'
-    >>> clean_document_name('/ashfd/df/  #$%@#$ }{_+"[ ]hello öworld--- .pdf')
+    >>> clean_document_name('/ashfd/df/  #$%@#$ }{_+"[ ]hello world--- .pdf')
     'hello-oworld----.pdf'
     """
     import unidecode

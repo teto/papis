@@ -3,7 +3,7 @@ import papis.commands
 import papis.document
 import papis.config
 import papis.bibtex
-import urllib.request
+import six.moves.urllib.request as request
 import tempfile
 import papis.cli
 import click
@@ -36,7 +36,7 @@ def do_add(doc, libgen=False, arxiv=False):
             logger.error('No doc_url data retrieved')
             return 1
         logger.info('Downloading document')
-        doc_data = urllib.request.urlopen(
+        doc_data = request.urlopen(
             doc['doc_url']
         ).read()
         file_name = tempfile.mktemp()

@@ -55,8 +55,8 @@ An example of sucessful returns:
     </book>
     ...
 """
-import urllib.parse
-import urllib.request  # import urlencode
+import six.moves.urllib.parse as parse
+import six.moves.urllib.request  as request # import urlencode
 import bs4
 import papis.config
 import logging
@@ -92,18 +92,18 @@ def get_data(
         "app_id": app_id,
         "app_key": app_key
     }
-    params = urllib.parse.urlencode(
+    params = parse.urlencode(
         {x: dict_params[x] for x in dict_params if dict_params[x]}
     )
     req_url = ISBNPLUS_BASEURL + "search?" + params
     logger.debug("url = " + req_url)
-    url = urllib.request.Request(
+    url = request.Request(
         req_url,
         headers={
             'User-Agent': papis.config.get('user-agent')
         }
     )
-    xmldoc = urllib.request.urlopen(url).read()
+    xmldoc = request.urlopen(url).read()
     root = bs4.BeautifulSoup(xmldoc, 'html.parser')
 
     for book in root.find_all('book'):

@@ -57,7 +57,6 @@ setup(
         "urwid>=1.3.1",
         "habanero>=0.6.0",
     ],
-    python_requires='>=3',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Environment :: Console',

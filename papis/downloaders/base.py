@@ -1,6 +1,6 @@
 import os
 import logging
-import urllib.request
+import six.moves.urllib.request as request
 import http.cookiejar
 import papis.config
 import papis.utils
@@ -78,7 +78,7 @@ class Downloader(object):
         url = self.get_bibtex_url()
         if not url:
             return False
-        data = urllib.request.urlopen(url)\
+        data = request.urlopen(url)\
             .read()\
             .decode('utf-8')
         self.bibtex_data = data
@@ -132,7 +132,7 @@ class Downloader(object):
         if not url:
             return False
         cookiejar = http.cookiejar.LWPCookieJar()
-        opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cookiejar))
+        opener = request.build_opener(request.HTTPCookieProcessor(cookiejar))
         opener.addheaders = [('User-Agent', papis.config.get('user-agent'))]
 
         u = opener.open(url)
