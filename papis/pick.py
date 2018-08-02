@@ -55,7 +55,9 @@ class Picker(object):
         self.header_filter = header_filter
         self.body_filter = body_filter
         self.match_filter = match_filter
-        self.match_strings = [self.match_filter(o) for o in self.options]
+        self.match_strings = {
+            idx: self.match_filter(o) for idx, o in enumerate(self.options)
+        }
 
         if default_index >= len(options):
             raise ValueError(
@@ -107,45 +109,19 @@ class Picker(object):
 
         return headers
 
-    def get_search_regex(self):
-        """TODO: Docstring for get_search_regex.
-        :returns: TODO
-
-        """
-        cleaned_search = self.search
-        # Clean up ( and )
-        cleaned_search = cleaned_search.replace('(', '\\(')\
-                                       .replace(')', '\\)')\
-                                       .replace('+', '\\+')\
-                                       .replace('[', '\\[')\
-                                       .replace(']', '\\]')
-        return r".*"+re.sub(r"\s+", ".*", cleaned_search)
-
-    def get_cleaned_search(self):
-        return self.search.replace('(', '\\(')\
-                           .replace(')', '\\)')\
-                           .replace('+', '\\+')\
-                           .replace('[', '\\[')\
-                           .replace(']', '\\]')
-
     def get_filtered_options(self):
         """TODO: Docstring for get_filtered_options.
         :returns: TODO
 
         """
         new_options = []
-        string_matches = fuzzywuzzy.process.extract(
+        string_matches = fuzzywuzzy.process.extractBests(
             self.search,
-            self.match_strings
+            self.match_strings,
+            score_cutoff=50 if len(self.search) > 0 else 0,
+            limit=min(len(self.options), self.screen.getmaxyx()[0]-1)
         )
-        for smatch in (s[0] for s in string_matches):
-            index = self.match_strings.index(smatch)
-            new_options += [self.options[index]]
-        # regex = self.get_search_regex()
-        # for option in self.options:
-            # if re.match(regex, self.match_filter(option), re.I):
-                # new_options += [option]
-        return new_options
+        return [self.options[s[2]] for s in string_matches]
 
     def get_lines(self):
         """TODO: Docstring for get_filtered_lines.
@@ -266,5 +242,5 @@ def pick(
                 header_filter,
                 body_filter,
                 match_filter
-                )
+            )
     return picker.start()
