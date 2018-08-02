@@ -55,6 +55,7 @@ setup(
         "python-magic>=0.4.13",
         "pylibgen>=1.3.0",
         "urwid>=1.3.1",
+        "six>=1.11.0",
         "habanero>=0.6.0",
     ],
     classifiers=[
