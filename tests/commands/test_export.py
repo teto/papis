@@ -91,6 +91,22 @@ class TestCli(tests.cli.TestCli):
             assert(len(data) == 1)
             assert(re.match(r'.*Krishnamurti.*', data[0]['author']) is not None)
 
+    # Then test with --all
+    def test_bibtex(self):
+        result = self.invoke([
+            'krishnamurti', '--bibtex',
+        ])
+        docs = self.get_docs()
+        string = run(docs, bibtex=True)
+        self.assertTrue(len(string) > 0)
+        data = papis.bibtex.bibtex_to_dict(string)
+        self.assertTrue(len(data) > 0)
+        self.assertTrue(result.exit_code == 0)
+        self.assertTrue(
+            result.stdout_bytes.decode() == ''
+        )
+
+
     def test_yaml(self):
 
         # output stdout
