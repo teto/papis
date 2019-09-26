@@ -10,14 +10,31 @@ import colorama
 import logging
 import subprocess
 import copy
-
+import click
 
 logger = logging.getLogger('fzf')
 
 # get all get_all_documents
 
+@click.help_option('--help', '-h')
+@click.version_option(version=papis.__version__)
+@click.option(
+    "--libraries",
+    help="List defined libraries",
+    default=False,
+    is_flag=True
+)
+def main(libraries):
+    lib = papis.config.get_lib()
+    print(lib)
+    config = papis.config.get_configuration()
+    logger = logging.getLogger('cli:list')
+    db = papis.database.get(library)
+    documents = db.get_all_documents()
+    print(documents)
 
-def main():
+
+    pick_doc()
 
     documents = papis.database.get_all_query_string()
     # documents = papis.database.get().query(query)
@@ -28,5 +45,11 @@ def main():
     # or wrap it
     customEnv = copy.copy(os.environ)
     # stdout=, 
-    subprocess.check_output(cmd, stdin="todo\nlala" , shell=True)
+    # stdin="todo\nlala" 
+    # stdout=subprocess.PIPE,
+
+    with subprocess.Popen(cmd, stdout=subprocess.PIPE,
+                            universal_newlines=True,  # opens in text mode
+                            ) as proc:
+        out = subprocess.Popen(cmd, shell=True)
 
